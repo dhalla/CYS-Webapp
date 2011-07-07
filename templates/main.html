@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CREATE YOUR STYLE</title>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+	<link rel="stylesheet" href="/css/main.css" />	
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+</head>
+
+<body>
+
+
+    <!-- Homepage, List all Projects -->
+    <div data-role="page" id="home">
+        <div data-role="header">
+            <h1>CREATE YOUR STYLE</h1>
+            <a href="#imprint" data-role="button" data-icon="info" data-iconpos="notext" data-transition="flip" class="ui-btn-right">Info</a>
+        </div>
+        <div data-role="content">
+            <!--
+            <div id="imageContainer" class="center">
+                <a href="#{{ featuredProject.key }}"><img class="center" src="http://www.create-your-style.com{{ featuredProject.image280 }}" alt="{{ featuredProject.title }}" /></a>
+                {% for design in designsByProject[featuredProject.key] %}
+                    <a href="#design-{{ design.id }}"><img class="center" src="http://www.create-your-style.com{{ design.image280 }}" alt="{{ design.title }}" /></a>
+                {% endfor %}                    
+            </div>     
+            <div class="center" id="imageNav">
+                <img src="http://www.create-your-style.com{{ featuredProject.image73 }}" alt="{{ featuredProject.title }}" width="45" height="45" />
+                {% for design in designsByProject[featuredProject.key] %}
+                    <img src="http://www.create-your-style.com{{ design.image135 }}" alt="{{ design.title }}" width="45" height="45" /> 
+                {% endfor %}        
+            </div>
+            -->      
+            <a href="#{{ featuredProject.key }}"><img class="center" src="http://www.create-your-style.com{{ featuredProject.image280 }}" alt="{{ featuredProject.title }}" /></a>
+            <!-- Recent Projects -->
+            <ul id="projectList" data-role="listview" data-inset="true">                 
+                {% for item in recentProjects %}
+                    <li>   
+                        <a href="#{{ item.key }}">
+                        <img src="http://www.create-your-style.com{{ item.image73 }}" alt="{{ item.title }}" width="80" height="80" />                                                
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.subtitle }}</p>
+                        </a>
+                    </li>
+                {% endfor %}            
+            </ul>             
+        </div>        
+    </div>
+    
+    
+    <!-- Project-Detail, list all Designs for a single Project -->
+    {% for project in allProjects %}  
+    <div data-role="page" id="{{ project.key }}">
+        <div data-role="header">
+            <h1>{{ project.title }}</h1>
+            <a data-role="button" data-icon="back" data-iconpos="notext" data-direction="reverse" href="#home">Project</a>
+        </div>
+        <div data-role="content">
+            <div class="designGallery center">
+            {% for design in allDesigns %}
+                {% if project.key == design.themeValue %}
+                <a href="#design-{{ design.id }}">
+                    <img src="http://www.create-your-style.com{{ design.image135 }}" alt="{{ design.title }}" />
+                </a>
+                {% endif %}           
+            {% endfor %}
+            </div>
+            <div class="textbox">
+                <h2>{{ project.title }}</h2>
+                <p>{{ project.subtitle }}</p>
+                <p class="description">{{ project.description }}</p>
+            </div>
+        </div>        
+    </div>  
+    {% endfor %}  
+    
+    
+    <!-- Design-Detailpage -->
+    {% for design in allDesigns %} 
+    <div data-role="page" id="design-{{ design.id }}" data-cysurl="{{ design.pageurl }}" class="designPage">
+        <div data-role="header">
+            <h1>{{ design.title }}</h1>
+            <a data-role="button" data-icon="grid" data-iconpos="notext" data-direction="reverse" href="#{{ design.themeValue }}">Project</a>
+        </div>
+        <div data-role="content">
+            <img src="http://www.create-your-style.com{{ design.image280 }}" alt="{{ design.title }}" class="center designImage" data-id="{{ design.id }}" />
+            <div class="textbox" style="margin-top: 10px">
+                <h2>{{ design.title }}</h2>
+                <p>{{ design.subline }}</p>
+                <p class="description">{{ design.creator }}</p>
+                <h3>Level</h3>
+                <p>{{ design.difficulty }}</p>
+                <h3>Technique</h3>
+                {% for item in design.technique %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                <h3>Elements</h3>
+                {% for item in design.products %}
+                    <img src="http://www.create-your-style.com{{ item.1 }}" alt="" />
+                {% endfor %}
+                <h3>Other Materials</h3>
+                <p>{{ design.othermaterials }}</p>
+                <h3>Instructions</h3>
+                <a href="http://www.create-your-style.com{{ design.instructioniphone }}" rel="external">{{ design.title }}</a> (PDF) 
+            </div>
+            <!-- Buttons -->
+            <fieldset class="ui-grid-a">
+                <div class="ui-block-a"><a href="http://www.create-your-style.com{{ design.instructioniphone }}" rel="external" data-role="button">Instructions</a></div>
+                <div class="ui-block-b"><a href="#share" id="shareBtn" data-role="button" data-rel="dialog" data-transition="slideup" data-id="{{ design.id }}">Share Design</a> </div>
+            </fieldset>
+            <!-- Other Designs -->
+            <ul id="designList" data-role="listview" data-inset="true">                 
+                <li data-role="list-divider">See also in {{ design.theme }}</li>
+                {% for item in designsByProject[featuredProject.key] %}
+                    <li>   
+                        <a href="#design-{{ item.id }}">
+                        <img src="http://www.create-your-style.com{{ item.image135 }}" alt="{{ item.title }}" width="80" height="80" />                                                
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.subtitle }}</p>
+                        </a>
+                    </li>
+                {% endfor %}            
+            </ul>                         
+        </div>        
+    </div> 
+    {% endfor %}   
+    
+    
+    <!-- Share-Dialog -->
+    <div data-role="page" id="share">
+        <div data-role="content">
+        <h3></h3>
+            <div data-role="controlgroup">
+                <a href="" data-role="button">Like it on Facebook</a>
+                <a href="" data-role="button" class="mailto">Send via E-Mail</a>
+            </div>
+            <a href="#" data-rel="back" data-role="button">Cancel</a>
+        </div>        
+    </div>        
+
+
+    <!-- Impressum / Infopage -->
+    <div data-role="page" id="imprint">
+        <div data-role="header">
+            <h1>About</h1>
+            <a data-rel="back" data-role="button" data-icon="back" data-direction="reverse">Back</a>
+        </div>
+        <div data-role="content">
+            <div class="textbox">
+                <h2>Imprint</h2>
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur </p>  
+            </div>
+        </div>        
+    </div>  
+
+</body>
+</html>
